@@ -23,19 +23,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
-    private ArrayAdapter mAdapter;
     private Toolbar mToolbar;
     private TabLayout mTabs;
-    private String[] mSoundArray; //TODO: Get list of sounds from directory. Add sounds.
-
+    private SoundsFragment mSoundsFragment;
+    private FavsFragment mFavsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mAdapter = new ArrayAdapter(MainActivity.this,
-                android.R.layout.simple_list_item_1, mSoundArray);
 
         // Viewpager
         mViewPager = findViewById(R.id.view_pager);
@@ -53,9 +49,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SoundsFragment(), getString(R.string.sound_frag_tabtitle));
-        adapter.addFragment(new FavsFragment(), getString(R.string.favs_frag_tabtitle));
+
+        mSoundsFragment = new SoundsFragment();
+        mFavsFragment = new FavsFragment();
+
+        adapter.addFragment(mSoundsFragment, getString(R.string.sound_frag_tabtitle));
+        adapter.addFragment(mFavsFragment, getString(R.string.favs_frag_tabtitle));
         viewPager.setAdapter(adapter);
     }
 
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onQueryTextChange(String newText) {
 
-                    mAdapter.getFilter().filter(newText);
+                    mSoundsFragment.getmAdapter().getFilter().filter(newText);
                     return true;
                 }
             });

@@ -4,21 +4,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
 
 import com.reich.gutesvomstoll.R;
 
-public class SoundsFragment extends Fragment {
+public class SoundsFragment extends ListFragment {
+
+    private ArrayAdapter mAdapter;
+    private String[] mSoundArray = {"Das muss man wissen!", "Ist kein Science-Fiction."}; //TODO: Get list of sounds from directory. Add sounds.
 
     public SoundsFragment() {
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public ArrayAdapter getmAdapter() {
+
+        return mAdapter;
     }
 
     @Nullable
@@ -27,7 +31,11 @@ public class SoundsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        // TODO: Implement sounds fragment
+        // Get this ListFragments associated List and bind the Adapter
+        mAdapter = new ArrayAdapter(getActivity(),
+                android.R.layout.simple_list_item_1, mSoundArray);
+
+        setListAdapter(mAdapter);
 
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
