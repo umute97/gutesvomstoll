@@ -3,19 +3,18 @@ package com.reich.gutesvomstoll;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
-import com.google.android.material.tabs.TabLayout;
-import com.reich.gutesvomstoll.ui.main.FavsFragment;
-import com.reich.gutesvomstoll.ui.main.SoundsFragment;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.tabs.TabLayout;
+import com.reich.gutesvomstoll.ui.main.FavsFragment;
+import com.reich.gutesvomstoll.ui.main.SoundsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
 
-            // Get the searchview that's activated, when the search icon is selected
+            // Get the SearchView that's activated, when the search icon is selected
             SearchView searchView = (SearchView) item.getActionView();
 
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
