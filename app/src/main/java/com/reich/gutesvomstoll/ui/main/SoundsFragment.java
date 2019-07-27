@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,10 +68,13 @@ public class SoundsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        String selItem = convertToRawName(mSoundNames[+position]);
+        TextView soundName = v.findViewById(android.R.id.text1);
+
+        String selItem = convertToRawName(soundName.getText().toString());
 
         Resources res = getActivity().getApplicationContext().getResources();
         int soundID = res.getIdentifier(selItem, "raw", getActivity().getApplicationContext().getPackageName());
+
         mMP = MediaPlayer.create(getActivity().getApplicationContext(), soundID);
         mMP.start();
     }
