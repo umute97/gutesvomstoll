@@ -57,7 +57,7 @@ public class SoundsFragment extends ListFragment {
 
         // Get this ListFragments associated List and bind the Adapter
         mAdapter = new ArrayAdapter(getActivity(),
-                android.R.layout.simple_list_item_1, mSoundNames);
+                R.layout.sound_list_item, mSoundNames);
 
         setListAdapter(mAdapter);
 
@@ -68,7 +68,7 @@ public class SoundsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        TextView soundName = v.findViewById(android.R.id.text1);
+        TextView soundName = v.findViewById(R.id.sound_text);
 
         String selItem = convertToRawName(soundName.getText().toString());
 
