@@ -77,5 +77,13 @@ public class SoundsFragment extends ListFragment {
 
         mMP = MediaPlayer.create(getActivity().getApplicationContext(), soundID);
         mMP.start();
+
+        mMP.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+
+            };
+        });
     }
 }
