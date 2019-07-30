@@ -57,7 +57,7 @@ public class SoundsFragment extends ListFragment {
 
         // Get this ListFragments associated List and bind the Adapter
         mAdapter = new ArrayAdapter(getActivity(),
-                R.layout.sound_list_item, mSoundNames);
+                R.layout.sound_list_item, R.id.sound_text, mSoundNames);
 
         setListAdapter(mAdapter);
 
