@@ -121,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        else if (id == R.id.action_stop_mp)  {
+
+            if(mSoundsFragment.mMP != null && mSoundsFragment.mMP.isPlaying())  {
+
+                mSoundsFragment.mMP.stop();
+                mSoundsFragment.mMP.release();
+            }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

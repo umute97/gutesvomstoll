@@ -23,7 +23,7 @@ public class SoundsFragment extends ListFragment {
     private ArrayAdapter mAdapter;
     private Field[] mRawSounds = R.raw.class.getFields();
     private String[] mSoundNames = formatSoundNames(mRawSounds);
-    private MediaPlayer mMP;
+    public MediaPlayer mMP;
 
     public SoundsFragment() {}
 

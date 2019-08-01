@@ -4,8 +4,14 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/ai_search"
         android:title="@string/action_find"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item
+        android:id="@+id/action_stop_mp"
+        android:icon="@drawable/ai_stop_mp"
+        android:title="Klang anhalten"
+        app:showAsAction="ifRoom|collapseActionView" />
 </menu>
