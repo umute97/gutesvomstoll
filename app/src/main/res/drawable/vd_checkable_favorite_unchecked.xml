@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="720dp"
-    android:height="720dp"
-    android:viewportHeight="12"
-    android:viewportWidth="12">
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportHeight="56"
+    android:viewportWidth="56">
 
     <path
-        android:strokeColor="@color/cardview_shadow_start_color"
+        android:strokeColor="@android:color/black"
         android:strokeWidth="1"
-        android:pathData="M 5,2 C 3.6,0 0,0.67 0.36,4 C 0.71,6.67 4.29,8.3 5,10
-                          C 5.71,8.3 9.29,6.67 9.64,4 C "/>
+        android:pathData="@string/heart_stroke_left"/>
 
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="1"
+        android:pathData="@string/heart_stroke_right"/>
 
+    <group android:name="not_filled">
+        <clip-path
+            android:name="clip"
+            android:pathData="@string/heart_clip_hidden"/>
+        <path
+            android:fillColor="@android:color/holo_red_dark"
+            android:pathData="@string/heart_full_path"/>
+    </group>
 </vector>
