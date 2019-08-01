@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="720dp"
+    android:height="720dp"
+    android:viewportHeight="12"
+    android:viewportWidth="12">
+
+    <path
+        android:strokeColor="@color/cardview_shadow_start_color"
+        android:strokeWidth="1"
+        android:pathData="M 5,2 C 3.6,0 0,0.67 0.36,4 C 0.71,6.67 4.29,8.3 5,10
+                          C 5.71,8.3 9.29,6.67 9.64,4 C "/>
+
+
+</vector>
