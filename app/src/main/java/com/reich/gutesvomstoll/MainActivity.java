@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.reich.gutesvomstoll.ui.main.FavsFragment;
-import com.reich.gutesvomstoll.ui.main.SoundsFragment;
+import com.reich.gutesvomstoll.ui.frag.FavsFragment;
+import com.reich.gutesvomstoll.ui.frag.SoundsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.reich.gutesvomstoll.ui.main;
+package com.reich.gutesvomstoll.ui.frag;
 
 import android.content.res.Resources;
 import android.media.MediaPlayer;
