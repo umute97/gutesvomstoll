@@ -25,8 +25,7 @@ import java.util.List;
 public class SoundsFragment extends ListFragment {
 
     private SoundListAdapter mAdapter;
-    private Field[] mRawSounds = R.raw.class.getFields();
-    private List<String> mSoundNames = formatSoundNames(mRawSounds);
+    private List<String> mSoundNames;
     public MediaPlayer mMP;
     private SoundDBHelper mDBHelper;
 
@@ -38,23 +37,6 @@ public class SoundsFragment extends ListFragment {
     public ArrayAdapter getmAdapter() {
 
         return mAdapter;
-    }
-
-    private List<String> formatSoundNames(Field[] rawSounds)  {
-
-        String[] soundNames = new String[rawSounds.length];
-
-        for (int i = 0; i < rawSounds.length; i++)  {
-
-            soundNames[i] = rawSounds[i].getName().toUpperCase().replace("_", " ");
-        }
-
-        return Arrays.asList(soundNames);
-    }
-
-    private String convertToRawName(String soundName)  {
-
-        return soundName.toLowerCase().replace(" ", "_");
     }
 
     @Nullable
@@ -76,14 +58,10 @@ public class SoundsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        TextView soundName = v.findViewById(R.id.sound_text);
+        TextView soundEntry = v.findViewById(R.id.sound_text);
+        String soundName = soundEntry.getText().toString();
 
-        String selItem = convertToRawName(soundName.getText().toString());
-
-        Resources res = getActivity().getApplicationContext().getResources();
-        int soundID = res.getIdentifier(selItem, "raw", getActivity().getApplicationContext().getPackageName());
-
-        mMP = MediaPlayer.create(getActivity().getApplicationContext(), soundID);
+        mMP = MediaPlayer.create(getActivity().getApplicationContext(), mDBHelper.findSound(soundName));
         mMP.start();
 
         mMP.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

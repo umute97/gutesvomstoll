@@ -1,5 +1,7 @@
 package com.reich.gutesvomstoll;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialize DBHelper
         mDBHelper = new SoundDBHelper(this);
+
+        if(appUpdate())  {
+
+            mDBHelper.populateSounds(this);
+        }
 
         // Viewpager
         mViewPager = findViewById(R.id.view_pager);
@@ -144,6 +151,57 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean appUpdate()  {
+
+        // Define a name for the preference file and a key name to save the version code to it
+        final String PREFS_NAME = "version";
+        final String PREF_VERSION_CODE_KEY = "version_code";
+        // Define a value that is set if the key does not exist
+        final int DOESNT_EXIST = -1;
+
+        // Get the current version code from the package
+        int currentVersionCode = 0;
+
+        try{
+
+            currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+
+        } catch (PackageManager.NameNotFoundException e)  {
+
+            Log.e(TAG, e.getMessage());
+        }
+
+        // Get the SharedPreferences from the preference file
+        // Creates the preference file if it does not exist
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        // Get the saved version code or set it if it does not exist
+        int savedVersionCode = prefs.getInt(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
+
+        // Create an editor to edit the shared preferences on app update
+        SharedPreferences.Editor edit = prefs.edit();
+
+        //Check for updates
+        if (savedVersionCode == DOESNT_EXIST)  {
+
+            mDBHelper.appUpdate();
+            // First run of the app
+            // Set the saved version code to the current version code
+            edit.putInt(PREF_VERSION_CODE_KEY, currentVersionCode);
+            edit.commit();
+            return true;
+        }
+        else if (currentVersionCode > savedVersionCode)  {
+
+            // App update
+            mDBHelper.appUpdate();
+            edit.putInt(PREF_VERSION_CODE_KEY, currentVersionCode);
+            edit.commit();
+            return true;
+        }
+
+        return false;
     }
 
 }
