@@ -15,24 +15,32 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
 import com.reich.gutesvomstoll.R;
+import com.reich.gutesvomstoll.util.SoundDBHelper;
+import com.reich.gutesvomstoll.util.SoundListAdapter;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 public class SoundsFragment extends ListFragment {
 
-    private ArrayAdapter mAdapter;
+    private SoundListAdapter mAdapter;
     private Field[] mRawSounds = R.raw.class.getFields();
-    private String[] mSoundNames = formatSoundNames(mRawSounds);
+    private List<String> mSoundNames = formatSoundNames(mRawSounds);
     public MediaPlayer mMP;
+    private SoundDBHelper mDBHelper;
 
-    public SoundsFragment() {}
+    public SoundsFragment(SoundDBHelper dbHelper) {
+
+        this.mDBHelper = dbHelper;
+    }
 
     public ArrayAdapter getmAdapter() {
 
         return mAdapter;
     }
 
-    private String[] formatSoundNames(Field[] rawSounds)  {
+    private List<String> formatSoundNames(Field[] rawSounds)  {
 
         String[] soundNames = new String[rawSounds.length];
 
@@ -41,7 +49,7 @@ public class SoundsFragment extends ListFragment {
             soundNames[i] = rawSounds[i].getName().toUpperCase().replace("_", " ");
         }
 
-        return soundNames;
+        return Arrays.asList(soundNames);
     }
 
     private String convertToRawName(String soundName)  {
@@ -56,8 +64,8 @@ public class SoundsFragment extends ListFragment {
                              @Nullable Bundle savedInstanceState) {
 
         // Get this ListFragments associated List and bind the Adapter
-        mAdapter = new ArrayAdapter(getActivity(),
-                R.layout.sound_list_item, R.id.sound_text, mSoundNames);
+        mAdapter = new SoundListAdapter(getActivity(),
+                R.layout.sound_list_item, mSoundNames, mDBHelper);
 
         setListAdapter(mAdapter);
 

@@ -1,6 +1,7 @@
 package com.reich.gutesvomstoll;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,22 +16,29 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.reich.gutesvomstoll.ui.frag.FavsFragment;
 import com.reich.gutesvomstoll.ui.frag.SoundsFragment;
+import com.reich.gutesvomstoll.util.SoundDBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "com.reich.gutesvomstoll";
+
     private ViewPager mViewPager;
     private Toolbar mToolbar;
     private TabLayout mTabs;
     private SoundsFragment mSoundsFragment;
     private FavsFragment mFavsFragment;
+    private SoundDBHelper mDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Initialize DBHelper
+        mDBHelper = new SoundDBHelper(this);
 
         // Viewpager
         mViewPager = findViewById(R.id.view_pager);
@@ -43,15 +51,13 @@ public class MainActivity extends AppCompatActivity {
         // Tabs
         mTabs = findViewById(R.id.tabs);
         mTabs.setupWithViewPager(mViewPager);
-
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        mSoundsFragment = new SoundsFragment();
+        mSoundsFragment = new SoundsFragment(mDBHelper);
         mFavsFragment = new FavsFragment();
 
         adapter.addFragment(mSoundsFragment, getString(R.string.sound_frag_tabtitle));
@@ -123,11 +129,18 @@ public class MainActivity extends AppCompatActivity {
 
         else if (id == R.id.action_stop_mp)  {
 
-            if(mSoundsFragment.mMP != null && mSoundsFragment.mMP.isPlaying())  {
+            try {
 
-                mSoundsFragment.mMP.stop();
-                mSoundsFragment.mMP.release();
+                if (mSoundsFragment.mMP != null && mSoundsFragment.mMP.isPlaying()) {
+
+                    mSoundsFragment.mMP.stop();
+                    mSoundsFragment.mMP.release();
+                }
+            } catch (java.lang.IllegalStateException ex)  {
+
+                Log.i(TAG, "Stop button pressed with no instance of MediaPlayer.");
             }
+
         }
 
         return super.onOptionsItemSelected(item);

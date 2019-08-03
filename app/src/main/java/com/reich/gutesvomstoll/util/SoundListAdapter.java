@@ -21,11 +21,14 @@ public class SoundListAdapter extends ArrayAdapter<String> {
 
     public SoundListAdapter(Context context,
                             int item_res,
-                            List<String> soundNames) {
+                            List<String> soundNames,
+                            SoundDBHelper dbHelper) {
 
         super(context, item_res, soundNames);
         this.mContext = context;
         this.mItemRes = item_res;
+        this.mDBHelper = dbHelper;
+        this.mList = soundNames;
     }
 
     @Override
