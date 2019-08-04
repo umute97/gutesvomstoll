@@ -44,13 +44,13 @@ public class SoundDBHelper extends SQLiteOpenHelper {
 
     public void populateSounds(Context context)  {
 
-        List<String> soundNames = formatSoundNames(mRawSounds);
-        Resources res = context.getResources();
+        //TODO: Should implement a Sound class that stores id, name and fave
+        int[] rawSoundIDs = getRawFileIdentifiers(mRawSounds);
+        String[] soundNames = (String[]) formatSoundNames(mRawSounds).toArray();
 
-        for(String soundName: soundNames)  {
+        for(int i=0; i < rawSoundIDs.length; i++)  {
 
-            int id = res.getIdentifier(soundName, "raw", context.getPackageName());
-            addToSoundDB(id, soundName);
+            addToSoundDB(rawSoundIDs[i], soundNames[i]);
         }
 
     }
@@ -81,6 +81,26 @@ public class SoundDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    private int[] getRawFileIdentifiers(Field[] rawSounds)  {
+
+        int[] identifiers = new int[rawSounds.length];
+
+        for(int i=0; i < identifiers.length; i++)  {
+
+            try {
+
+                identifiers[i] = rawSounds[i].getInt(rawSounds[i]);
+
+            } catch (IllegalAccessException e) {
+
+                Log.e(TAG, e.getMessage());
+
+            }
+        }
+
+        return identifiers;
+
+    }
     private List<String> formatSoundNames(Field[] rawSounds)  {
 
         String[] soundNames = new String[rawSounds.length];
