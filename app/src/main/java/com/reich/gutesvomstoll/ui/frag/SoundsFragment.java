@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
 import com.reich.gutesvomstoll.R;
+import com.reich.gutesvomstoll.util.Sound;
 import com.reich.gutesvomstoll.util.SoundDBHelper;
 import com.reich.gutesvomstoll.util.SoundListAdapter;
 
@@ -25,7 +26,7 @@ import java.util.List;
 public class SoundsFragment extends ListFragment {
 
     private SoundListAdapter mAdapter;
-    private List<String> mSoundNames;
+    private List<Sound> mSounds;
     public MediaPlayer mMP;
     private SoundDBHelper mDBHelper;
 
@@ -46,8 +47,10 @@ public class SoundsFragment extends ListFragment {
                              @Nullable Bundle savedInstanceState) {
 
         // Get this ListFragments associated List and bind the Adapter
+        mSounds = mDBHelper.getSoundsFromDB();
+
         mAdapter = new SoundListAdapter(getActivity(),
-                R.layout.sound_list_item, mSoundNames, mDBHelper);
+                R.layout.sound_list_item, mSounds, mDBHelper);
 
         setListAdapter(mAdapter);
 
@@ -58,10 +61,9 @@ public class SoundsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        TextView soundEntry = v.findViewById(R.id.sound_text);
-        String soundName = soundEntry.getText().toString();
+        Sound sound = mSounds.get(position);
 
-        mMP = MediaPlayer.create(getActivity().getApplicationContext(), mDBHelper.findSound(soundName));
+        mMP = MediaPlayer.create(getActivity().getApplicationContext(), sound.getID());
         mMP.start();
 
         mMP.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

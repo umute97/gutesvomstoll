@@ -12,27 +12,27 @@ import com.reich.gutesvomstoll.R;
 
 import java.util.List;
 
-public class SoundListAdapter extends ArrayAdapter<String> {
+public class SoundListAdapter extends ArrayAdapter<Sound> {
 
-    private List<String> mList;
+    private List<Sound> mList;
     private Context mContext;
     private final int mItemRes;
     private SoundDBHelper mDBHelper;
 
     public SoundListAdapter(Context context,
                             int item_res,
-                            List<String> soundNames,
+                            List<Sound> sounds,
                             SoundDBHelper dbHelper) {
 
-        super(context, item_res, soundNames);
+        super(context, item_res, sounds);
         this.mContext = context;
         this.mItemRes = item_res;
         this.mDBHelper = dbHelper;
-        this.mList = soundNames;
+        this.mList = sounds;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if(convertView == null)  {
 
@@ -40,7 +40,8 @@ public class SoundListAdapter extends ArrayAdapter<String> {
             convertView = inflater.inflate(mItemRes, parent, false);
         }
 
-        String soundName = getItem(position);
+        final Sound sound = mList.get(position);
+        String soundName = sound.getName();
 
         if(soundName != null)  {
 
@@ -50,12 +51,25 @@ public class SoundListAdapter extends ArrayAdapter<String> {
                 tv_soundName.setText(soundName);
         }
 
-        boolean isFav = mDBHelper.checkFave(soundName);
+        boolean isFav = sound.isFave();
 
-        CheckBox cb_fave = convertView.findViewById(R.id.fav_check);
+        final CheckBox cb_fave = convertView.findViewById(R.id.fav_check);
 
         if(cb_fave != null)
             cb_fave.setChecked(isFav);
+
+        cb_fave.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                final boolean isChecked = cb_fave.isChecked();
+                mDBHelper.setFave(sound, isChecked);
+                sound.setIsFave(isChecked);
+
+                notifyDataSetChanged();
+            }
+        });
 
         return convertView;
     }

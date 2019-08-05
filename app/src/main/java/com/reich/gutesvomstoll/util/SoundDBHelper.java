@@ -11,6 +11,7 @@ import android.util.Log;
 import com.reich.gutesvomstoll.R;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,31 +43,29 @@ public class SoundDBHelper extends SQLiteOpenHelper {
         onCreate(favDB);
     }
 
-    public void populateSounds(Context context)  {
+    public void populateDB()  {
 
-        //TODO: Should implement a Sound class that stores id, name and fave
-        int[] rawSoundIDs = getRawFileIdentifiers(mRawSounds);
-        String[] soundNames = (String[]) formatSoundNames(mRawSounds).toArray();
+        List<Sound> soundList = getSoundsFromRaw();
 
-        for(int i=0; i < rawSoundIDs.length; i++)  {
+        for(Sound sound: soundList)  {
 
-            addToSoundDB(rawSoundIDs[i], soundNames[i]);
+            addToSoundDB(sound);
         }
 
     }
 
-    private void addToSoundDB(int id, String soundName)  {
+    private void addToSoundDB(Sound sound)  {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if(!soundIdExists(db, id))  {
+        if(!soundExists(db, sound))  {
 
             try  {
 
                 ContentValues cv = new ContentValues();
 
-                cv.put("id", id);
-                cv.put("soundName", soundName);
+                cv.put("id", sound.getID());
+                cv.put("soundName", sound.getName());
 
                 db.insert("sounds", null, cv);
 
@@ -81,51 +80,46 @@ public class SoundDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    private int[] getRawFileIdentifiers(Field[] rawSounds)  {
+    private int getRawFileIdentifier(Field rawSound)  {
 
-        int[] identifiers = new int[rawSounds.length];
+        int identifier = -1;
 
-        for(int i=0; i < identifiers.length; i++)  {
+        try {
 
-            try {
+            identifier = rawSound.getInt(rawSound);
 
-                identifiers[i] = rawSounds[i].getInt(rawSounds[i]);
+        } catch (IllegalAccessException e) {
 
-            } catch (IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
 
-                Log.e(TAG, e.getMessage());
-
-            }
         }
 
-        return identifiers;
+        return identifier;
 
     }
-    private List<String> formatSoundNames(Field[] rawSounds)  {
 
-        String[] soundNames = new String[rawSounds.length];
+    private String formatRawToName(Field rawSound)  {
 
-        for (int i = 0; i < rawSounds.length; i++)  {
+        String soundName = null;
 
-            soundNames[i] = rawSounds[i].getName().toUpperCase().replace("_", " ");
-        }
+        soundName = rawSound.getName().toUpperCase().replace("_", " ");
 
-        return Arrays.asList(soundNames);
+        return soundName;
     }
 
-    private String convertToRawName(String soundName)  {
+    private String convertNameToRaw(String soundName)  {
 
         return soundName.toLowerCase().replace(" ", "_");
     }
 
-    private boolean soundIdExists(SQLiteDatabase db, int id)  {
+    private boolean soundExists(SQLiteDatabase db, Sound sound)  {
 
         int count = -1;
         Cursor cursor = null;
 
         try {
 
-            String query = "SELECT * FROM sounds WHERE id = " + id;
+            String query = "SELECT * FROM sounds WHERE id = " + sound.getID();
             cursor = db.rawQuery(query, null);
 
             // If the entry with the given sound id exists get the rows _id as count value
@@ -147,6 +141,39 @@ public class SoundDBHelper extends SQLiteOpenHelper {
 
     }
 
+    private List<Sound> getSoundsFromRaw()  {
+
+        List<Sound> soundList = new ArrayList<Sound>();
+
+        for(Field rawSound: mRawSounds)  {
+
+            soundList.add(new Sound(getRawFileIdentifier(rawSound), formatRawToName(rawSound), false));
+        }
+
+        return soundList;
+    }
+
+    public List<Sound> getSoundsFromDB()  {
+
+        SQLiteDatabase db = getReadableDatabase();
+        List<Sound> soundList = new ArrayList<Sound>();
+
+        Cursor c = db.rawQuery("select * from sounds order by soundName", null);
+
+        c.moveToFirst();
+        while(!c.isAfterLast())  {
+
+            soundList.add(new Sound(c.getInt(c.getColumnIndex("id")),
+                    c.getString(c.getColumnIndex("soundName")),
+                    c.getInt(c.getColumnIndex("isFav")) > 0)
+            );
+
+            c.moveToNext();
+        }
+
+        return soundList;
+    }
+
     public void appUpdate(){
 
         try {
@@ -164,44 +191,15 @@ public class SoundDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean checkFave(String soundName)  {
+    public void setFave(Sound sound, boolean isFaved)  {
 
-        boolean isFave = false;
+        SQLiteDatabase db = getWritableDatabase();
 
-        //TODO: Implement.
+        ContentValues cv = new ContentValues();
 
-        return isFave;
+        cv.put("isFav", isFaved);
+
+        db.update("sounds",cv,"id = ?", new String[] {Integer.toString(sound.getID())});
     }
 
-    public boolean checkFave(int soundId)  {
-
-        boolean isFave = false;
-
-        //TODO: Implement.
-
-        return isFave;
-    }
-
-    public int findSound(String soundName)  {
-
-        //TODO: Implement.
-
-        return -1;
-    }
-
-    public String findSound(int soundId)  {
-
-        //TODO: Implement.
-
-        return "dickbutt";
-    }
-
-    public List<String> getSoundList()  {
-
-        List<String> soundList = Arrays.asList("dickbutt");
-
-        //TODO: Implement.
-
-        return soundList;
-    }
 }

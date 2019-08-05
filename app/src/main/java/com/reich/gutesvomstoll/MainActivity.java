@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(appUpdate())  {
 
-            mDBHelper.populateSounds(this);
+            mDBHelper.populateDB();
         }
 
         // Viewpager
