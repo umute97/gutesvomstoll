@@ -73,4 +73,6 @@ public class SoundListAdapter extends ArrayAdapter<Sound> {
 
         return convertView;
     }
+
+    // TODO: Implement Searchable interface and filter method
 }
