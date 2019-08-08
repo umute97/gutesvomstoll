@@ -174,6 +174,27 @@ public class SoundDBHelper extends SQLiteOpenHelper {
         return soundList;
     }
 
+    public List<Sound> getFavesFromDB()  {
+
+        SQLiteDatabase db = getReadableDatabase();
+        List<Sound> soundList = new ArrayList<Sound>();
+
+        Cursor c = db.rawQuery("select * from sounds where isFav = 1 order by soundName", null);
+
+        c.moveToFirst();
+        while(!c.isAfterLast())  {
+
+            soundList.add(new Sound(c.getInt(c.getColumnIndex("id")),
+                    c.getString(c.getColumnIndex("soundName")),
+                    c.getInt(c.getColumnIndex("isFav")) > 0)
+            );
+
+            c.moveToNext();
+        }
+
+        return soundList;
+    }
+
     public void appUpdate(){
 
         try {

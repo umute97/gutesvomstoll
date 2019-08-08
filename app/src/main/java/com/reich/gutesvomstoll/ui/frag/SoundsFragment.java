@@ -25,6 +25,8 @@ import java.util.List;
 
 public class SoundsFragment extends ListFragment {
 
+    private final String TAG = "com.reich.gutesvomstoll";
+
     private SoundListAdapter mAdapter;
     private List<Sound> mSounds;
     public MediaPlayer mMP;
@@ -73,5 +75,12 @@ public class SoundsFragment extends ListFragment {
 
             };
         });
+    }
+
+    public void updateView()  {
+
+        mSounds.clear();
+        mSounds.addAll(mDBHelper.getSoundsFromDB());
+        mAdapter.notifyDataSetChanged();
     }
 }

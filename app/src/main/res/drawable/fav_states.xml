@@ -9,7 +9,8 @@
 
     <item
         android:id="@+id/unchecked"
-        android:drawable="@drawable/vd_checkable_favorite_unchecked"/>
+        android:drawable="@drawable/vd_checkable_favorite_unchecked"
+        android:state_checked="false"/>
 
     <transition
         android:drawable="@drawable/avd_checkable_favorite_unchecked_to_checked"

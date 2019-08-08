@@ -56,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         // Tabs
+        TabLayout.OnTabSelectedListener sync = new SyncFavesListener();
         mTabs = findViewById(R.id.tabs);
         mTabs.setupWithViewPager(mViewPager);
+        mTabs.addOnTabSelectedListener(sync);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         mSoundsFragment = new SoundsFragment(mDBHelper);
-        mFavsFragment = new FavsFragment();
+        mFavsFragment = new FavsFragment(mDBHelper);
 
         adapter.addFragment(mSoundsFragment, getString(R.string.sound_frag_tabtitle));
         adapter.addFragment(mFavsFragment, getString(R.string.favs_frag_tabtitle));
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(String newText) {
 
                     mSoundsFragment.getmAdapter().getFilter().filter(newText);
+                    mFavsFragment.getmAdapter().getFilter().filter(newText);
                     return true;
                 }
             });
@@ -142,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
 
                     mSoundsFragment.mMP.stop();
                     mSoundsFragment.mMP.release();
+                }
+            } catch (java.lang.IllegalStateException ex)  {
+
+                Log.i(TAG, "Stop button pressed with no instance of MediaPlayer.");
+            }
+
+            try {
+
+                if (mFavsFragment.mMP != null && mFavsFragment.mMP.isPlaying()) {
+
+                    mFavsFragment.mMP.stop();
+                    mFavsFragment.mMP.release();
                 }
             } catch (java.lang.IllegalStateException ex)  {
 
@@ -202,6 +217,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private class SyncFavesListener implements TabLayout.OnTabSelectedListener  {
+
+
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+            int pastPos = tab.getPosition();
+
+            Log.i(TAG, "Unselected pos " + pastPos);
+            switch (pastPos)  {
+
+                case 0:
+                    mFavsFragment.updateView();
+                    break;
+
+                case 1:
+                    mSoundsFragment.updateView();
+                    break;
+            }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
     }
 
 }

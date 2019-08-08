@@ -8,13 +8,11 @@
 
     <path
         android:pathData="@string/heart_stroke_left"
-        android:strokeColor="@android:color/black"
-        android:strokeWidth="1"/>
+        android:fillColor="@android:color/holo_red_dark" />
 
     <path
         android:pathData="@string/heart_stroke_right"
-        android:strokeColor="@android:color/black"
-        android:strokeWidth="1"/>
+        android:fillColor="@android:color/holo_red_dark" />
 
     <group android:name="filled">
         <clip-path
