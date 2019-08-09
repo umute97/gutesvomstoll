@@ -64,7 +64,7 @@ public class FavsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        Sound sound = mSounds.get(position);
+        Sound sound = mAdapter.getItem(position);
 
         mMP = MediaPlayer.create(getActivity().getApplicationContext(), sound.getID());
         mMP.start();

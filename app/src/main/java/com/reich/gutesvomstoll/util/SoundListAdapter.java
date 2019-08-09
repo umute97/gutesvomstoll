@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.reich.gutesvomstoll.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SoundListAdapter extends ArrayAdapter<Sound> implements Filterable {
@@ -78,7 +79,29 @@ public class SoundListAdapter extends ArrayAdapter<Sound> implements Filterable 
         return convertView;
     }
 
-    // TODO: Implement Searchable interface and filter method
+    @Override
+    public int getCount() {
+
+        return mDisplayedSounds != null ? mDisplayedSounds.size() : 0;
+    }
+
+    @Override
+    public Sound getItem(int position) {
+
+        return mDisplayedSounds.get(position);
+    }
+
+    @Override
+    public int getPosition(Sound item) {
+
+        for(int i = 0; i < mDisplayedSounds.size(); i++)  {
+
+            if(item == mDisplayedSounds.get(i))
+                return i;
+
+        }
+        return super.getPosition(item);
+    }
 
     @Override
     public Filter getFilter() {
@@ -86,20 +109,42 @@ public class SoundListAdapter extends ArrayAdapter<Sound> implements Filterable 
         Filter filter = new Filter() {
 
             @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
+            protected FilterResults performFiltering(CharSequence constraint)  {
 
-                FilterResults filterResults = new FilterResults();
-                // TODO: Add filtering algorithm
+                FilterResults results = new FilterResults();
 
-                return filterResults;
+                if (constraint == null || constraint.length() == 0)  {
+
+                    results.count = mOriginalSounds.size();
+                    results.values = mOriginalSounds;
+
+                } else  {
+
+                    constraint = constraint.toString().toLowerCase();
+                    List<Sound> filteredList = new ArrayList<Sound>();
+
+                    for (Sound sound: mOriginalSounds)  {
+
+                        String soundName = sound.getName();
+
+                        if (soundName.toLowerCase().contains(constraint.toString()))  {
+
+                            filteredList.add(new Sound(sound.getID(), sound.getName(), sound.isFave()));
+                        }
+                    }
+
+                    results.count = filteredList.size();
+                    results.values = filteredList;
+                }
+
+                return results;
 
             }
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults filterResults) {
 
-                mDisplayedSounds.clear();
-                mDisplayedSounds.addAll((List<Sound>) filterResults.values);
+                mDisplayedSounds = (List<Sound>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
