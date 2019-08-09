@@ -6,15 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.reich.gutesvomstoll.R;
 
 import java.util.List;
 
-public class SoundListAdapter extends ArrayAdapter<Sound> {
+public class SoundListAdapter extends ArrayAdapter<Sound> implements Filterable {
 
-    private List<Sound> mList;
+    private List<Sound> mOriginalSounds;
+    private List<Sound> mDisplayedSounds;
     private Context mContext;
     private final int mItemRes;
     private SoundDBHelper mDBHelper;
@@ -28,7 +31,8 @@ public class SoundListAdapter extends ArrayAdapter<Sound> {
         this.mContext = context;
         this.mItemRes = item_res;
         this.mDBHelper = dbHelper;
-        this.mList = sounds;
+        this.mOriginalSounds = sounds;
+        this.mDisplayedSounds = sounds;
     }
 
     @Override
@@ -40,7 +44,7 @@ public class SoundListAdapter extends ArrayAdapter<Sound> {
             convertView = inflater.inflate(mItemRes, parent, false);
         }
 
-        final Sound sound = mList.get(position);
+        final Sound sound = mDisplayedSounds.get(position);
         String soundName = sound.getName();
 
         if(soundName != null)  {
@@ -75,4 +79,32 @@ public class SoundListAdapter extends ArrayAdapter<Sound> {
     }
 
     // TODO: Implement Searchable interface and filter method
+
+    @Override
+    public Filter getFilter() {
+
+        Filter filter = new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                FilterResults filterResults = new FilterResults();
+                // TODO: Add filtering algorithm
+
+                return filterResults;
+
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults filterResults) {
+
+                mDisplayedSounds.clear();
+                mDisplayedSounds.addAll((List<Sound>) filterResults.values);
+                notifyDataSetChanged();
+            }
+        };
+
+        return filter;
+
+    }
 }
