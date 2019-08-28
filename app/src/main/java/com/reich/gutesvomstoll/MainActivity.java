@@ -236,11 +236,11 @@ public class MainActivity extends AppCompatActivity {
             switch (pastPos)  {
 
                 case 0:
-                    mFavsFragment.updateView();
+                    mFavsFragment.updateView(mDBHelper.getFavesFromDB());
                     break;
 
                 case 1:
-                    mSoundsFragment.updateView();
+                    mSoundsFragment.updateView(mDBHelper.getSoundsFromDB());
                     break;
             }
         }

@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
 
 import com.reich.gutesvomstoll.R;
 import com.reich.gutesvomstoll.util.Sound;
@@ -19,13 +19,14 @@ import com.reich.gutesvomstoll.util.SoundListAdapter;
 
 import java.util.List;
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends ListFragment {
 
     private final String TAG = "com.reich.gutesvomstoll";
 
-    private SoundListAdapter mAdapter;
-    private List<Sound> mSounds;
-    private SoundDBHelper mDBHelper;
+    public SoundListAdapter mAdapter;
+    public List<Sound> mSounds;
+    public SoundDBHelper mDBHelper;
+    public MediaPlayer mMP;
 
     public BaseFragment(SoundDBHelper dbHelper) {
 
@@ -43,15 +44,8 @@ public class BaseFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        // Get this ListFragments associated List and bind the Adapter
-        mSounds = mDBHelper.getSoundsFromDB();
-
-        mAdapter = new SoundListAdapter(getActivity(),
-                R.layout.sound_list_item, mSounds, mDBHelper);
-
-        setListAdapter(mAdapter);
-
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflateFragment(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
@@ -72,10 +66,19 @@ public class BaseFragment extends Fragment {
         });
     }
 
-    public void updateView()  {
+    public void updateView(List<Sound> list)  {
 
         mSounds.clear();
-        mSounds.addAll(mDBHelper.getSoundsFromDB());
+        mSounds.addAll(list);
         mAdapter.notifyDataSetChanged();
     }
+
+    public void setupListAdapter()  {
+
+        mAdapter = new SoundListAdapter(getActivity(),
+                R.layout.sound_list_item, mSounds, mDBHelper);
+        setListAdapter(mAdapter);
+    }
+
+    public abstract View inflateFragment(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 }
