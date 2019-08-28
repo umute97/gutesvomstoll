@@ -107,11 +107,6 @@ public class SoundDBHelper extends SQLiteOpenHelper {
         return soundName;
     }
 
-    private String convertNameToRaw(String soundName)  {
-
-        return soundName.toLowerCase().replace(" ", "_");
-    }
-
     private boolean soundExists(SQLiteDatabase db, Sound sound)  {
 
         int count = -1;
