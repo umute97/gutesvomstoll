@@ -19,6 +19,12 @@ import com.reich.gutesvomstoll.util.SoundListAdapter;
 
 import java.util.List;
 
+/*  The base fragment class
+    Since both fragments are more or less the same (hold sound entries in list, play them back, etc.)
+    with the only difference in actual Sound/Favorite differentiation in the database, we just create
+    an abstract base class that children can inherit from.
+    Differences manifest themselves in different implementation of the abstract method "inflateFragment".
+ */
 public abstract class BaseFragment extends ListFragment {
 
     private final String TAG = "com.reich.gutesvomstoll";

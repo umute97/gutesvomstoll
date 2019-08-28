@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.reich.gutesvomstoll.R;
 import com.reich.gutesvomstoll.util.SoundDBHelper;
 
+// The fragment that hold all of the sounds
 public class SoundsFragment extends BaseFragment {
 
     public SoundsFragment(SoundDBHelper dbHelper) {

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.reich.gutesvomstoll.R;
 import com.reich.gutesvomstoll.util.SoundDBHelper;
 
+// The fragment that hold the favorites only
 public class FavsFragment extends BaseFragment {
 
     public FavsFragment(SoundDBHelper dbHelper) {

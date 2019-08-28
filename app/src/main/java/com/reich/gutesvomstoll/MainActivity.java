@@ -39,15 +39,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initialize DBHelper
+        //Initialize DBHelper that handles all the DB communication
         mDBHelper = new SoundDBHelper(this);
 
+        //Check if this is an update to the database and repopulate if necessary
         if(appUpdate())  {
 
             mDBHelper.populateDB();
         }
 
-        // Viewpager
+        // Viewpager that hosts and switches fragments
         mViewPager = findViewById(R.id.view_pager);
         setupViewPager(mViewPager);
 
@@ -55,13 +56,16 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        // Tabs
+        // Tabs that hold the fragments
         TabLayout.OnTabSelectedListener sync = new SyncFavesListener();
         mTabs = findViewById(R.id.tabs);
         mTabs.setupWithViewPager(mViewPager);
         mTabs.addOnTabSelectedListener(sync);
     }
 
+    /*  Adds and initializes all necessary fragments and adds them to the viewpager
+        TODO: Remove hardcoded tab headers.
+     */
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    // Inner class that handles fragment-viewpager interaction
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -110,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Two actions supported: Search a sound and stop a currently playing sound
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -168,11 +174,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*  Actual (ugly) code that handles updates to the database. Works by manually incrementing the
+        version code with each addition/change of sounds in the db.
+     */
     private boolean appUpdate()  {
 
-        // Define a name for the preference file and a key name to save the version code to it
+        // Define a name for the preference file and a key name to save the version code to
         final String PREFS_NAME = "version";
         final String PREF_VERSION_CODE_KEY = "version_code";
+
         // Define a value that is set if the key does not exist
         final int DOESNT_EXIST = -1;
 
@@ -191,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
         // Get the SharedPreferences from the preference file
         // Creates the preference file if it does not exist
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
         // Get the saved version code or set it if it does not exist
         int savedVersionCode = prefs.getInt(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
 
@@ -201,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedVersionCode == DOESNT_EXIST)  {
 
             mDBHelper.appUpdate();
+
             // First run of the app
             // Set the saved version code to the current version code
             edit.putInt(PREF_VERSION_CODE_KEY, currentVersionCode);
@@ -221,12 +233,6 @@ public class MainActivity extends AppCompatActivity {
 
     private class SyncFavesListener implements TabLayout.OnTabSelectedListener  {
 
-
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-
-        }
-
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
 
@@ -246,9 +252,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onTabReselected(TabLayout.Tab tab) {
+        public void onTabSelected(TabLayout.Tab tab) {}
+        public void onTabReselected(TabLayout.Tab tab) {}
 
-        }
     }
 
 }
