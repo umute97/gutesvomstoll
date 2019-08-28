@@ -68,7 +68,7 @@ public abstract class BaseFragment extends ListFragment {
             public void onCompletion(MediaPlayer mp) {
                 mp.release();
 
-            };
+            }
         });
     }
 
